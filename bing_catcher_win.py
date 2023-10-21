@@ -23,11 +23,12 @@ BING_WALLPAPER_FILENAME = TYEAR + TMONTH + TDAY + "_bing_wallpaper.jpeg"
 
 if args.directory:
     BING_WALLPAPER_LOCAL_PATH = os.path.join(args.directory, BING_WALLPAPER_FILENAME)
+    SUCCESS = "Wallpaper download success: " + BING_WALLPAPER_LOCAL_PATH
 else:
    parser.print_help()
    sys.exit(1)
 
-SUCCESS = "Wallpaper download success: " + BING_WALLPAPER_LOCAL_PATH
+
 
 
 def bing_wallpaper_url() -> str:
