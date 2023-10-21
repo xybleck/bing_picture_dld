@@ -29,8 +29,6 @@ else:
    sys.exit(1)
 
 
-
-
 def bing_wallpaper_url() -> str:
     try:
         req = requests.get(BING_URL)
