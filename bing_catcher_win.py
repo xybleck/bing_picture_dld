@@ -15,6 +15,7 @@
    limitations under the License.
 """
 
+
 import requests
 import re
 import os
@@ -36,12 +37,17 @@ TDAY = str(TDAY) if TDAY > 9 else "0"+str(TDAY)
 BING_URL = "https://bing.com"
 BING_WALLPAPER_FILENAME = TYEAR + TMONTH + TDAY + "_bing_wallpaper.jpeg"
 
-if args.directory:
-    BING_WALLPAPER_LOCAL_PATH = os.path.join(args.directory, BING_WALLPAPER_FILENAME)
-    SUCCESS = "Wallpaper download success: " + BING_WALLPAPER_LOCAL_PATH
-else:
-   parser.print_help()
-   sys.exit(1)
+try:
+    if args.directory:
+        BING_WALLPAPER_LOCAL_PATH = os.path.join(args.directory, BING_WALLPAPER_FILENAME)
+        SUCCESS = "Wallpaper download success: " + BING_WALLPAPER_LOCAL_PATH
+    else:
+        parser.print_help()
+        sys.exit(1)
+        
+except Exception as e:
+    print("Error: " + e)
+    sys.exit(1)
 
 
 def bing_wallpaper_url() -> str:
@@ -50,7 +56,7 @@ def bing_wallpaper_url() -> str:
         if req.status_code == 200:
             for _ in req.text.split(" "):
                 if re.match(r'^url\(', _):
-                    bing_wallpaper_url = "https://bing.com" + str(_.split("(")[1].split(")")[0])
+                    bing_wallpaper_url = BING_URL + str(_.split("(")[1].split(")")[0])
                     return bing_wallpaper_url
         else:
             raise SystemError("HTTPS request failed resolving wallpaper url")
@@ -58,6 +64,7 @@ def bing_wallpaper_url() -> str:
     except Exception as e:
         print("Error: " + e)
         sys.exit(1)
+
 
 def bing_wallpaper_img(url: str) -> bool:
     try:
@@ -77,13 +84,14 @@ def bing_wallpaper_img(url: str) -> bool:
 
 def main():
     try:
-        wu = bing_wallpaper_url()
-        bing_wallpaper_img(wu)
+        bwu = bing_wallpaper_url()
+        bing_wallpaper_img(bwu)
         print(SUCCESS)
-    
+        sys.exit(0)    
+
     except Exception as e:
         print("Error: " + e)
-        sys.exit(0)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
